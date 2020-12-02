@@ -45,5 +45,15 @@ foreach ($line1 in $data)
 $endTime = Get-Date
 $duration = New-TimeSpan -Start $startTime -End $endTime
 Write-Warning -Message "Script took $($duration.TotalSeconds) seconds to run."
-##first number 1664
-###last number 1943
+#####################
+####Output will look like this
+#####################
+##WARNING: Line1 1065 Line2 368 Line3 587 sumAnswerPt2 [2020] multiplyAnswerPt2 [230057040]
+##WARNING: Line1 1065 Line2 587 Line3 368 sumAnswerPt2 [2020] multiplyAnswerPt2 [230057040]
+##WARNING: Line1 1236 Line2 784 sumAnswerPt1 [2020] multiplyAnswerPt1 [969024]
+##WARNING: Line1 368 Line2 1065 Line3 587 sumAnswerPt2 [2020] multiplyAnswerPt2 [230057040]
+##WARNING: Line1 368 Line2 587 Line3 1065 sumAnswerPt2 [2020] multiplyAnswerPt2 [230057040]
+##WARNING: Line1 587 Line2 1065 Line3 368 sumAnswerPt2 [2020] multiplyAnswerPt2 [230057040]
+##WARNING: Line1 587 Line2 368 Line3 1065 sumAnswerPt2 [2020] multiplyAnswerPt2 [230057040]
+##WARNING: Line1 784 Line2 1236 sumAnswerPt1 [2020] multiplyAnswerPt1 [969024]
+##WARNING: Script took 211.806495 to run.
