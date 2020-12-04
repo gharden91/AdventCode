@@ -72,6 +72,9 @@ for (($line=0),($x = 0); $line -lt $parsedDataRowCount; ($line +=2), ($x+=1))
 }
 Write-Warning -Message "Pt 2e Trees Ran Into $($pt2eSuccessData)"
 Write-Warning -Message "Pt 2 multiplied together is $($pt2aSuccessData * $pt1SuccessData * $pt2cSuccessData * $pt2dSuccessData * $pt2eSuccessData)"
+$endTime = Get-Date
+$duration = New-TimeSpan -Start $startTime -End $endTime
+Write-Warning -Message "Script took $($duration.TotalSeconds) seconds to run."
 #####################
 ####Output
 #####################
