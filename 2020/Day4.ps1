@@ -9,7 +9,7 @@ $InformationPreference = "Continue"
 #####################
 ####debug info
 #####################
-$dataPath = ".\Day4.txt"
+$dataPath = ".\2020\Day4.txt"
 $data = Get-Content -Path $dataPath
 [System.Collections.ArrayList]$parsedData = @()
 [int]$lineCounter = 0##lines in the txt file

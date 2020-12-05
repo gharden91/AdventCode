@@ -9,7 +9,7 @@ $InformationPreference = "Continue"
 #####################
 ####debug info
 #####################
-$dataPath = ".\Day2.csv"
+$dataPath = ".\2020\Day2.csv"
 $data = Import-Csv -Path $dataPath -Delimiter " "
 $startTime = Get-Date
 $pt1SuccessData = @()

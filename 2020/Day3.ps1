@@ -9,7 +9,7 @@ $InformationPreference = "Continue"
 #####################
 ####debug info
 #####################
-$dataPath = ".\Day3.txt"
+$dataPath = ".\2020\Day3.txt"
 $data = Get-Content -Path $dataPath
 $parsedData = @()
 $parsedDataRowCount = 0

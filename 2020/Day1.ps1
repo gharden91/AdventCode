@@ -9,7 +9,7 @@ $InformationPreference = "Continue"
 #####################
 ####debug info
 #####################
-$dataPath = ".\Day1.csv"
+$dataPath = ".\2020\Day1.csv"
 $data = Import-Csv -Path $dataPath
 $startTime = Get-Date
 ############################
