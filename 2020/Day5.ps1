@@ -1,5 +1,5 @@
 #####################
-####variables
+####debug info
 #####################
 $VerbosePreference = "SilentlyContinue"##SilentlyContinue,Continue
 $WarningPreference = "Continue"
@@ -7,7 +7,7 @@ $DebugPreference = "Continue"
 $ErrorActionPreference = "Continue"
 $InformationPreference = "Continue"
 #####################
-####debug info
+####variables
 #####################
 $dataPath = ".\2020\Day5.csv"
 $data = Import-Csv -Path $dataPath
