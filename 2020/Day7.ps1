@@ -135,38 +135,57 @@ do
 ##clear silver
 $doneSearching = $false
 $search = @("shiny gold")
+[System.Collections.ArrayList]$pt2AnswerArray = @()
 $timesThrough = 0
 $multiplyNumber = 0
 $multiplyBy = 0
 $sumArray = @()
 do
 {
+    
     ########to do 
     ####update code based on logic below.
     ####I've been iterating through the parsed data like it's gospel. If a parent bag is on 2 lines, it's still 1 bag.
     ####instead of looping through rows need to be doing lines.
     $timesThrough++
-    Write-Verbose -Message "timesThrough [$($timesThrough)] search $($search)"
-    $object = $parsedData | Where-Object {$_.parentBag -in $search}
+    ##Write-Verbose -Message "timesThrough [$($timesThrough)] search $($search)"
+    $selectedRows = $parsedData | Where-Object {$_.parentBag -in $search}
     $search = @()
-    foreach ($row in $object)
+    if ($timesThrough -eq 1) {$multiplyBy = 1;}
+    foreach ($row in $selectedRows)
     {
-        if ($timesThrough -eq 1) {$multiplyBy = 1}
-        Write-Verbose -Message "$($multiplyBy) $($row.parentBag) times $($row.count) $($row.childBag) equals $($multiplyBy * $row.count)"
-        $search += $parsedData | Where-Object {$_.parentBag -in $row.childBag -and $_.count -ne 0} | Select-Object -ExpandProperty parentBag -Unique
-        $sumArray += $row.count * $multiplyBy
-        $multiplyBy = $row.count * $multiplyBy
+        $bagPermutations = [PSCustomObject]@{
+            parentBag = $row.parentBag
+            count = $row.count
+            childBag = $row.childBag
+        }
+        if ($timesThrough -ne 1)
+        {
+            [int]$multiplyBy = ($pt2AnswerArray | Where-Object {$_.childBag -in $row.parentBag} | Select-Object -ExpandProperty count)
+        }
+        $multiple = $row.count * $multiplyBy
+        for ($int = 1; $int -le $multiple;$int++)
+        {
+            $pt2AnswerArray.Add($bagPermutations) | Out-Null
+        }
+        ##$multiplyBy = $row.count
+        ##$sumArray += $row.count * $multiplyBy
+        ##$multiplyBy = $row.count * $multiplyBy
         ##$sumArray += $row.count
         ##$multiplyNumber += ($row.count *  ($parsedData | Where-Object {$_.parentBag -eq $row.childBag} | Measure-Object -Property count -Sum).Sum)
         ##$search += $parsedData | Where-Object {$_.parentBag -in $row.childBag -and $_.count -ne 0} | Select-Object -ExpandProperty parentBag -Unique
         ##Write-Verbose -Message "Row [$($row)] sumarray [$(($sumArray | Measure-Object -Sum).Sum)] multiplynumber [$($multiplyNumber)]"
         ##Write-Verbose -Message "Search $($search)"
     }
-    Write-Verbose -Message "multiplyNumber [$($multiplyNumber)]"
-    if ($timesThrough -eq 15) {$doneSearching = $true}
+
+    $search += $parsedData | Where-Object {$_.parentBag -in $row.childBag -and $_.count -ne 0} | Select-Object -ExpandProperty parentBag -Unique
+    Write-Verbose -Message "$($multiplyBy) $($row.parentBag) times $($row.count) $($row.childBag) equals $($multiplyBy * $row.count)"
+    Write-Verbose -Message "search [$($search)] timesThrough $($timesThrough)"
+    if ($timesThrough -eq 8) {$doneSearching = $true}
 }while ($doneSearching -eq $false)
 $multiplyNumber + ($sumArray | Measure-Object -Sum).Sum
 
+##$pt2AnswerArray | Out-GridView
 ##$parsedData | Out-GridView
 
 ##shiny gold bags contain 2 dark red bags.      1 shiny gold * 2 dark red       = 2 dark red
