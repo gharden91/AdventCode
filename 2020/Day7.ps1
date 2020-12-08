@@ -96,7 +96,7 @@ do
     $pt1Search = $pt1Answer
     ##if ($timesThrough -eq 15) {$doneSearching = $true}
 } while ($doneSearching -eq $false)
-##$pt1AnswerArray | Out-GridView
+##$pt1AnswerArray | Out-GridView shiny gold
 Write-Warning -Message  "Pt 1 Answer. How many bag colors can eventually contain at least one shiny gold bag? [$($pt1Answer.Count)]" #151 is correct
 
 $pt2Search = "shiny gold"
@@ -130,26 +130,74 @@ do
 } while ($doneSearching -eq $false)
 ##$pt2AnswerArray | Out-GridView
 
-
-function Day7-GetContent
+##shiny gold
+##muted fuchsia
+##clear silver
+$doneSearching = $false
+$search = @("shiny gold")
+$timesThrough = 0
+$multiplyNumber = 0
+$multiplyBy = 0
+$sumArray = @()
+do
 {
-    param
-    (
-        $object,
-        $search
-    )
-    $selectedData = $object | Where-Object {$_.parentBag -eq $search}
-    [int]$contains = [int]$contains + [int]$selectedData.Count
-    foreach ($row in $selectedData)
+    ########to do 
+    ####update code based on logic below.
+    ####I've been iterating through the parsed data like it's gospel. If a parent bag is on 2 lines, it's still 1 bag.
+    ####instead of looping through rows need to be doing lines.
+    $timesThrough++
+    Write-Verbose -Message "timesThrough [$($timesThrough)] search $($search)"
+    $object = $parsedData | Where-Object {$_.parentBag -in $search}
+    $search = @()
+    foreach ($row in $object)
     {
-        Write-Verbose -Message "Search [$($search)] Contains [$($contains)] SelectedDataCount [$($selectedData.Count)] row.ChildBag [$($row.childBag)]"
-        Day7-GetContent -object $object -search $row.childBag
+        if ($timesThrough -eq 1) {$multiplyBy = 1}
+        Write-Verbose -Message "$($multiplyBy) $($row.parentBag) times $($row.count) $($row.childBag) equals $($multiplyBy * $row.count)"
+        $search += $parsedData | Where-Object {$_.parentBag -in $row.childBag -and $_.count -ne 0} | Select-Object -ExpandProperty parentBag -Unique
+        $sumArray += $row.count * $multiplyBy
+        $multiplyBy = $row.count * $multiplyBy
+        ##$sumArray += $row.count
+        ##$multiplyNumber += ($row.count *  ($parsedData | Where-Object {$_.parentBag -eq $row.childBag} | Measure-Object -Property count -Sum).Sum)
+        ##$search += $parsedData | Where-Object {$_.parentBag -in $row.childBag -and $_.count -ne 0} | Select-Object -ExpandProperty parentBag -Unique
+        ##Write-Verbose -Message "Row [$($row)] sumarray [$(($sumArray | Measure-Object -Sum).Sum)] multiplynumber [$($multiplyNumber)]"
+        ##Write-Verbose -Message "Search $($search)"
     }
-    return $contains
-}
+    Write-Verbose -Message "multiplyNumber [$($multiplyNumber)]"
+    if ($timesThrough -eq 15) {$doneSearching = $true}
+}while ($doneSearching -eq $false)
+$multiplyNumber + ($sumArray | Measure-Object -Sum).Sum
 
-$total = Day7-GetContent -object $pt2AnswerArray -search "shiny gold"
-$total | Measure-Object -Sum
+##$parsedData | Out-GridView
+
+##shiny gold bags contain 2 dark red bags.      1 shiny gold * 2 dark red       = 2 dark red
+##dark red bags contain 2 dark orange bags.     2 dark red * 2 dark orange      = 4 dark orange
+##dark orange bags contain 2 dark yellow bags.  4 dark orange * 2 dark yellow   = 8 dark yellow
+##dark yellow bags contain 2 dark green bags.   8 dark yellow * 2 dark green    = 16 dark green
+##dark green bags contain 2 dark blue bags.     16 dark green * 2 dark blue     = 32 dark blue
+##dark blue bags contain 2 dark violet bags.    32 dark blue * 2 dark violet    = 64 dark violet
+##dark violet bags contain no other bags.
+
+
+
+##function Day7-GetPt2Count
+##{
+##    param
+##    (
+##        $object,
+##        $search
+##    )
+##    $selectedData = $object | Where-Object {$_.parentBag -eq $search}
+##    foreach ($row in $selectedData)
+##    {
+##        Write-Verbose -Message "$($row)"
+##        ##Write-Verbose -Message "Iteration [$($row.iteration)] Parent [$($row.parentBag)] Count [$($row.count)] row.ChildBag [$($row.childBag)] Search [$($search)] SelectedDataCount [$($selectedData.Count)]"
+##        Day7-GetPt2Count -object $object -search $row.childBag
+##    }
+##    return $contains
+##}
+##
+##$total = Day7-GetPt2Count -object $pt2AnswerArray -search "shiny gold"
+##$total | Measure-Object -Sum
 ##$timesThrough = 0
 ##foreach ($item in $pt2Answer)
 ##{
@@ -161,7 +209,7 @@ $total | Measure-Object -Sum
 ##    }while ($doneSearching -eq $false)
 ##}
 
-##$pt2Answer##more than 448, more than 24655
+##$pt2Answer##more than 448, more than 797, more than 24655
 $endTime = Get-Date
 $duration = New-TimeSpan -Start $startTime -End $endTime
 Write-Warning -Message "Script took $($duration.TotalSeconds) seconds to run."
